@@ -1,5 +1,7 @@
 项目名称：买房推荐系统
 
+项目成员：@liangpeili @hongzhih @yangshaoshun @dyelaine
+
 项目代码地址：https://github.com/liangpeili/housebuy
 
 version0.1 发布日期：2015-12-10
