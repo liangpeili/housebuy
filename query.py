@@ -9,7 +9,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def query_db(district):
-    conn = MySQLdb.connect(host="localhost",user="root",passwd="Ppnn13fish,",db="housebuy",charset="utf8")
+    conn = MySQLdb.connect(host="localhost",user="house",passwd="xxxxxx",db="housebuy",charset="utf8")
     cur = conn.cursor()
     cur.execute("select * from soufang where district = %s limit 3", (district,))
     lines = cur.fetchall()
