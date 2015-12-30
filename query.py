@@ -62,6 +62,26 @@ def query_db_all(price1, price2, area1, area2, addr):
 
     return '标题:'+lines[0][2]+'\n'+'价格:'+str(lines[0][3])+'\n'+'户型:'+lines[0][4]+'\n'+'面积:'+str(lines[0][5])+'\n'+'中介:'+lines[0][6]+'\n'+'电话:'+lines[0][9]+'\n'+'地区:'+lines[0][7]+'\n'+'街道:'+lines[0][8]+'\n'+'详细介绍:'+lines[0][10]
 
+def query_db_dp(district):
+    conn = MySQLdb.connect(host="localhost",user="root",passwd="Ppnn13fish,",db="housebuy",charset="utf8")
+    cur = conn.cursor()
+    cur.execute("select district, avg(price/area) from soufang where district = %s", (district,))
+    lines = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return lines[0][0]+'二手房平均价格为:'+str(lines[0][1])+'万元'
+
+def query_db_cp(comarea):
+    conn = MySQLdb.connect(host="localhost",user="root",passwd="Ppnn13fish,",db="housebuy",charset="utf8")
+    cur = conn.cursor()
+    cur.execute("select comarea, avg(price/area) from soufang where comarea = %s", (comarea,))
+    lines = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return lines[0][0]+'二手房平均价格为:'+str(lines[0][1])+'万元'
+
 if __name__ == "__main__":
     district = raw_input('你想买哪里的房子？')
     query_db(district)

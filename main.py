@@ -4,7 +4,7 @@
 from flask import Flask,request
 import hashlib
 import xml.etree.ElementTree as ET
-from query import query_db, query_db_price, query_db_area, query_db_all
+from query import query_db, query_db_price, query_db_area, query_db_all, query_db_cp, query_db_dp
 import sys
 import re
 
@@ -41,8 +41,15 @@ def return_district():
     root = ET.fromstring(data)
     mydict = {child.tag:child.text for child in root}
     try:
-        if mydict['Content'] == 'Hi':
-            mydic['Content'] = '你好，我是你的买房私人专家。你想买哪里的房子？'
+        if mydict['Content'].lower() == 'hi':
+            mydic['Content'] = '''你好，我是你的买房私人专家。
+本微信号可以提供房源查询以及房价查询功能：
+输入a+面积上下限根据面积筛选，例a50:100
+输入p+价格上下限根据面积筛选，例p100:200
+输入‘合并查询’将前几个条件合并查询
+输入cp+地区名查询某地区房价均价，例cp中关村
+输入dp+区县名查询某区县房价均价，例dp海淀
+不加前缀，默认为区县名，例 海淀'''        
         elif re.match(r'^a', mydict['Content']):
             pattern_a = re.compile(r'\d+')
             global area
@@ -67,6 +74,32 @@ def return_district():
             print "price1:" + price[0] + "price2:" + price[1]
             try:
                 mydic['Content'] = query_db_price(price1, price2)
+                print mydic['Content']
+                
+            except:
+                print "query db erorr"
+                mydic['Content'] = '数据库查询错误，请重新输入。'
+        elif re.match(r'^cp', mydict['Content']):
+            xx=u"([\u4e00-\u9fa5]+)"
+            pattern = re.compile(xx)
+            temp = mydict['Content'].decode('utf8')
+            comarea = pattern.findall(temp)
+            
+            try:
+                mydic['Content'] = query_db_cp(comarea)
+                print mydic['Content']
+                
+            except:
+                print "query db erorr"
+                mydic['Content'] = '数据库查询错误，请重新输入。'
+        elif re.match(r'^dp', mydict['Content']):
+            xx=u"([\u4e00-\u9fa5]+)"
+            pattern = re.compile(xx)
+            temp = mydict['Content'].decode('utf8')
+            district = pattern.findall(temp)
+            
+            try:
+                mydic['Content'] = query_db_dp(district)
                 print mydic['Content']
                 
             except:
